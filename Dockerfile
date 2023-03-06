@@ -1,7 +1,8 @@
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
 ENV BUILD_DIR=/usr/local/src
 ENV BARVINOK_VER=0.41
+ENV NTL_VER=11.5.1
 
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get -y install tzdata \
@@ -37,8 +38,9 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR $BUILD_DIR
-RUN git clone https://github.com/libntl/ntl.git \
-    && cd ntl/src \
+RUN wget https://libntl.org/ntl-$NTL_VER.tar.gz \
+    && tar -xvzf ntl-$NTL_VER.tar.gz \
+    && cd ntl-$NTL_VER/src \
     && ./configure NTL_GMP_LIP=on \
     && make \
     && make install
