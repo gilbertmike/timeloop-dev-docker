@@ -1,7 +1,7 @@
 FROM ubuntu:22.04
 
 ENV BUILD_DIR=/usr/local/src
-ENV BARVINOK_VER=0.41
+ENV BARVINOK_VER=0.41.6
 ENV NTL_VER=11.5.1
 
 RUN apt-get update \
