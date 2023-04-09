@@ -41,7 +41,7 @@ WORKDIR $BUILD_DIR
 RUN wget https://libntl.org/ntl-$NTL_VER.tar.gz \
     && tar -xvzf ntl-$NTL_VER.tar.gz \
     && cd ntl-$NTL_VER/src \
-    && ./configure NTL_GMP_LIP=on \
+    && ./configure NTL_GMP_LIP=on SHARED=on \
     && make \
     && make install
 
@@ -50,7 +50,13 @@ WORKDIR $BUILD_DIR
 RUN wget https://barvinok.sourceforge.io/barvinok-$BARVINOK_VER.tar.gz \
     && tar -xvzf barvinok-$BARVINOK_VER.tar.gz \
     && cd barvinok-$BARVINOK_VER \
-    && ./configure \
+    && ./configure --enable-shared-barvinok \
     && make \
     && make install
 
+# Get Python libraries
+RUN pip3 install jupyter \
+                 numpy \
+                 matplotlib \
+                 pandas \
+                 seaborn
