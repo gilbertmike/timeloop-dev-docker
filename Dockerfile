@@ -1,8 +1,9 @@
 FROM ubuntu:22.04
 
 ENV BUILD_DIR=/usr/local/src
-ENV BARVINOK_VER=0.41.6
+ENV BARVINOK_VER=0.41.7
 ENV NTL_VER=11.5.1
+ENV ISLPY_VER=2024.2
 
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get -y install tzdata \
@@ -30,6 +31,8 @@ RUN apt-get update \
                        libboost-dev \
                        libboost-iostreams-dev \
                        libboost-serialization-dev \
+                       libboost-filesystem-dev \
+                       libboost-log-dev \
                        libyaml-cpp-dev \
                        libncurses5-dev \
                        libtinfo-dev \
@@ -53,6 +56,13 @@ RUN wget https://barvinok.sourceforge.io/barvinok-$BARVINOK_VER.tar.gz \
     && ./configure --enable-shared-barvinok \
     && make \
     && make install
+
+WORKDIR $BUILD_DIR
+RUN wget -O islpy-$ISLPY_VER.tar.gz https://github.com/inducer/islpy/archive/refs/tags/v$ISLPY_VER.tar.gz \
+    && tar -xvzf islpy-$ISLPY_VER.tar.gz \
+    && cd islpy-$ISLPY_VER \
+    && sed -i 's/python/python3/g' build-with-barvinok.sh \
+    && ./build-with-barvinok.sh /usr/local
 
 # Get Python libraries
 RUN pip3 install jupyter \
